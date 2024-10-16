@@ -23,10 +23,6 @@ app.use(
   })
 );
 
-app.use("/", (req, res) => {
-  res.send("Web server is up and running");
-});
-
 app.use(morgan("combined"));
 
 app.use("/api", ApiRoutes);
