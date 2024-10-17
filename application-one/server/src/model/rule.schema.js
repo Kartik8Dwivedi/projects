@@ -1,13 +1,14 @@
+// models/rule.js
 import mongoose from "mongoose";
 
 const astNodeSchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ["operator", "operand"], 
+    enum: ["operator", "operand"],
     required: true,
   },
   value: {
-    type: mongoose.Schema.Types.Mixed, // AND/OR or a comparison value)
+    type: mongoose.Schema.Types.Mixed, // AND/OR or a comparison value
     required: true,
   },
   left: {
@@ -26,33 +27,34 @@ const ruleSchema = new mongoose.Schema(
     ruleString: {
       type: String,
       required: true,
-      trim: true, 
+      trim: true,
+      unique: true
     },
     ast: {
-      type: astNodeSchema, 
+      type: astNodeSchema,
       required: true,
     },
     ruleName: {
       type: String,
       trim: true,
-      default: "Unnamed Rule", 
+      default: "Unnamed Rule",
     },
     description: {
       type: String,
       trim: true,
-      default: "", 
+      default: "",
     },
     createdAt: {
       type: Date,
-      default: Date.now, 
+      default: Date.now,
     },
     updatedAt: {
       type: Date,
-      default: Date.now, 
+      default: Date.now,
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 
