@@ -18,10 +18,13 @@ connectToDB();
 
 app.use(
   cors({
-    origin: [FRONTEND_URL, 'http://localhost:5173'],
-    credentials: true,
-  }) 
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"], 
+    credentials: true, 
+  })
 );
+
+app.options("*", cors());
 
 app.use(morgan("combined"));
 
