@@ -11,7 +11,9 @@ const RuleManager = () => {
 
   const fetchRules = async () => {
     try {
-      const response = await axios.get(import.meta.env.VITE_BACKEND_URI+"rules");
+      const response = await axios.get(
+        "https://zeotap-project-one.vercel.app/api/v1/rules"
+      );
       setRules(response.data.data);
       console.log(rules);
     } catch (error) {
@@ -22,7 +24,7 @@ const RuleManager = () => {
   const deleteRule = async (id: number) => {
     try {
       let response = await axios.delete(
-        import.meta.env.VITE_BACKEND_URI + `rules/${id}`
+        `https://zeotap-project-one.vercel.app/api/v1/rules/${id}`
       ); 
       console.log(response);
       toast.success("Rule deleted successfully!");
@@ -35,9 +37,12 @@ const RuleManager = () => {
 
   const updateRule = async (id: number) => {
     try {
-      await axios.put(import.meta.env.VITE_BACKEND_URI + `rules/${id}`, {
-        ruleString: updatedRules[id],
-      }); 
+      await axios.put(
+        `https://zeotap-project-one.vercel.app/api/v1/rules/${id}`,
+        {
+          ruleString: updatedRules[id],
+        }
+      ); 
       setEditingRuleId(null); 
       fetchRules(); 
     } catch (error) {

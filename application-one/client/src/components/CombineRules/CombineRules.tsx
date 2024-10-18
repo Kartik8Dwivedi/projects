@@ -16,7 +16,7 @@ const CombineRules = () => {
       const ruleArray = rule.split(",").map((item) => item.trim());
       console.log(ruleArray);
       const response = await axios.post(
-        import.meta.env.VITE_BACKEND_URI + "combine",
+        "https://zeotap-project-one.vercel.app/api/v1/combine",
         {
           ruleStrings: ruleArray,
         }
