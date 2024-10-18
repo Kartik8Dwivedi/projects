@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import "./TextInput.css";
 
 const TextInput = ({
   rule,
@@ -13,10 +12,11 @@ const TextInput = ({
   const [currentPlaceholder, setCurrentPlaceholder] = useState("");
   const [textValue, setTextValue] = useState(rule); 
   const placeholders = [
-    "Write your rules here",
-    "Create Rules for your queries",
-    "Create rules with ease",
-    "Rules are easy to create",
+      "Write your rules here separated by commas",
+      "Create multiple rules for your queries",
+      "Combine rules to create complex queries",
+      "Create rules with ease",
+      "Rules are easy to create",
   ];
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
 

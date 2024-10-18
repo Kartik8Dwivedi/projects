@@ -134,6 +134,12 @@ export async function combineTrees(ruleStrings) {
       description: "A rule combined from multiple rules",
     }); 
 
+    // check if this rule is already in the tree then don't save it to the database and send proper error message
+    const existing = await Rule.findOne({ ruleString: newRule.ruleString });
+    if (existing) {
+      throw new Error("Rule already exists");
+    }
+
     const savedRule = await newRule.save();
 
     return savedRule;

@@ -6,7 +6,6 @@ import axios from "axios";
 const CreateRule = () => {
   const [rule, setRule] = useState<string>("");
   const [submit, setSubmit] = useState<boolean>(false);
-  let data;
 
   const handleSubmit = async () => {
     if (rule.trim() === "") {
@@ -44,15 +43,14 @@ const CreateRule = () => {
   }, [submit]);
 
   return (
-    <>
-      <div className="flex flex-col justify-center items-center gap-6">
+    <div className="flex justify-center items-center">
+      <div className="flex flex-col justify-center items-center gap-6 w-[60vw]">
         <TextInput rule={rule} setRule={setRule} setSubmit={setSubmit} />
         <button className="btn btn-warning" onClick={() => setSubmit(true)}>
-          Submit
+          Create Rule
         </button>
-        {data && `<p>${data}</p>`}
       </div>
-    </>
+    </div>
   );
 };
 
