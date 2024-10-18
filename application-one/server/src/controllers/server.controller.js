@@ -6,6 +6,7 @@ import {
   updateRule,
   getRuleById,
   deleteRule,
+  combineTrees,
 } from "../services/server.services.js";
 
 
@@ -89,21 +90,26 @@ class ServerController {
 
     async combineRules(req,res) {
         try {
-          const { rules } = req.body;
-          if (!rules || !Array.isArray(rules)) {
-            return appError(res, 400, {}, "Invalid input. Expected an array of rules.");
-          }
+              const {ruleStrings} = req.body; 
 
-            
-          res.status(201).json({
-            message: "Combined Rule Saved Successfully",
-            rule: savedRule,
-          });
+              if (
+                !ruleStrings ||
+                !Array.isArray(ruleStrings) ||
+                ruleStrings.length === 0
+              ) {
+                return appError(
+                  res,
+                  400,
+                  ruleStrings,
+                  "Invalid input. Provide an array of rule strings."
+                );
+            }
+            let combinedResult = await combineTrees(ruleStrings);
+            return appSuccess(res, 200, combinedResult, "Rules combined successfully");
+
         } catch (error) {
           console.error("Error combining rules:", error);
-          res
-            .status(500)
-            .json({ message: "Error combining rules", error: "YES" });
+            return appError(res, 500, error, error.message || "Internal server error");
         }
     }
 

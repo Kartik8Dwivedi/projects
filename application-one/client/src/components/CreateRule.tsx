@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import TextInput from "./TextInput";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const CreateRule = () => {
   const [rule, setRule] = useState<string>("");
@@ -15,23 +16,18 @@ const CreateRule = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3030/api/v1/rules", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(response);
-      if (!response.ok) {
+      const response = await axios.post("http://localhost:3030/api/v1/rules", {ruleString:rule});
+
+      if (response.status !== 200 && response.status !== 201) {
         setSubmit(false);
-        toast.error("Failed to submit rule.");
+        toast.error("Failed to submit rule.", );
         throw new Error("Network response was not ok");
       }
-
-      data = await response.json();
+      const data = response.data;
       console.log("Backend response:", data);
       toast.success("Rule submitted successfully!");
       setSubmit(false);
+
     } catch (error) {
       console.error("Error submitting rule:", error);
       toast.error("Failed to submit rule.");

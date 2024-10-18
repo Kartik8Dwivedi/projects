@@ -11,7 +11,7 @@ router.get("/rules", serverController.getRules); // get all rules
 router.get("/rules/:id", serverController.getRuleById) // get rule by id
 router.post("/rules/:ruleId/evaluatee", serverController.evaluateRule); // evaluate rule
 router.put("/rules/:id", serverController.updateRule); // update rule
-router.put("/combine", serverController.combineRules); // combine rules
+router.post("/combine", serverController.combineRules); // combine rules
 router.delete("/rules/:id", serverController.deleteRule); // delete rule
 
 export default router;

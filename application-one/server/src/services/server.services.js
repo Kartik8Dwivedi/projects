@@ -1,11 +1,17 @@
 import { ASTNode, combineRules, evaluateAST, parseRuleToAST } from "../helpers/ast.node.js";
+import { combineRulesHelper } from "../helpers/combineRules.js";
 import Rule from "../model/rule.schema.js";
 
 import { createRuleRepository, getRuleByIdRepository, getRulesRepository, updateRuleRepository } from "../repository/server.repository.js";
 
 export async function createRule(req){
     try {
+        console.log(req.body);
         const { ruleString, ruleName, description } = req.body;
+
+        if(!ruleString){
+            throw new Error("Rule cannot be empty");
+        }
 
         validateSingleRule(ruleString);
 
@@ -115,11 +121,33 @@ export async function deleteRule(id){
     }
 }
 
+export async function combineTrees(ruleStrings) {
+  try {
+    // Combine the rules into a single AST
+    const combinedAST = combineRulesHelper(ruleStrings);
+
+    // Create a new Rule entry with the combined AST
+    const newRule = new Rule({
+      ruleString: ruleStrings.join(" AND "),
+      ast: combinedAST,
+      ruleName: "Combined Rule",
+      description: "A rule combined from multiple rules",
+    }); 
+
+    const savedRule = await newRule.save();
+
+    return savedRule;
+  } catch (error) {
+    console.log("Error in combining rules in service layer", error);
+    throw error;
+  }
+}
+
 
     const validateSingleRule = (rule) => {
-        const ruleRegex = /^[A-Z]+\s+.+\s+WHERE\s+.+$/i;
+        // const ruleRegex = /^[A-Z]+\s+.+\s+WHERE\s+.+$/i;
 
-        if (!ruleRegex.test(rule)) {
-        throw new Error(`Invalid rule syntax for single rule: ${rule}`);
-        }
+        // if (!ruleRegex.test(rule)) {
+        // throw new Error(`Invalid rule syntax for single rule: ${rule}`);
+        // }
     };
