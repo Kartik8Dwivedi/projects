@@ -5,6 +5,7 @@ import {
   evaluateRule,
   updateRule,
   getRuleById,
+  deleteRule,
 } from "../services/server.services.js";
 
 
@@ -51,12 +52,19 @@ class ServerController {
 
     async evaluateRule(req,res) {
         try {
-            const { attributes } = req.body;
-            if (!attributes) {
-                return appError(res, 400, {}, "Invalid input. Expected user attributes.");
-            }
-            const result = await evaluateRule(attributes);
-            return appSuccess(res, 200, result, "Rule evaluated successfully");
+          const ruleId = req.params.ruleId; // Get ruleId from URL params
+          const attributes = req.body.attributes; // Get attributes from request body
+
+          if (!attributes || !ruleId) {
+            return appError(
+              res,
+              400,
+              {},
+              "Invalid input. Expected user attributes and rule ID."
+            );
+          }
+          const result = await evaluateRule(ruleId, attributes);
+          return appSuccess(res, 200, result, "Rule evaluated successfully");
         } catch (error) {
             console.log(error);
             return appError(res, 500, error, "Internal server error");
@@ -80,7 +88,34 @@ class ServerController {
     }
 
     async combineRules(req,res) {
-        
+        try {
+          const { rules } = req.body;
+          if (!rules || !Array.isArray(rules)) {
+            return appError(res, 400, {}, "Invalid input. Expected an array of rules.");
+          }
+
+            
+          res.status(201).json({
+            message: "Combined Rule Saved Successfully",
+            rule: savedRule,
+          });
+        } catch (error) {
+          console.error("Error combining rules:", error);
+          res
+            .status(500)
+            .json({ message: "Error combining rules", error: "YES" });
+        }
+    }
+
+    async deleteRule(req,res) {
+        try {
+            let deletedRule = await deleteRule(req.params.id)
+            return appSuccess(res, 200, deletedRule, "Rule deleted successfully");
+        } catch (error) {
+            console.error("Error deleting rule:", error);
+            
+            return appError(res, 500, error, error.message || "Internal server error");
+        }
     }
 }
 

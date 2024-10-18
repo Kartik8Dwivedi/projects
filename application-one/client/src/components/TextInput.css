@@ -1,0 +1,23 @@
+.custom-textarea {
+  overflow: auto; /* Ensure the scrollbar appears when needed */
+}
+
+/* Custom scrollbar styles */
+.custom-textarea::-webkit-scrollbar {
+  width: 4px; /* Width of the scrollbar */
+  overflow: hidden; /*
+}
+
+.custom-textarea::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1); /* Track background */
+  border-radius: 20px; /* Rounded track */
+}
+
+.custom-textarea::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.5); /* Thumb color */
+  border-radius: 20px; /* Rounded thumb */
+}
+
+.custom-textarea::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.7); /* Thumb color on hover */
+}

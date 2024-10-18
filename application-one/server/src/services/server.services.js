@@ -6,6 +6,9 @@ import { createRuleRepository, getRuleByIdRepository, getRulesRepository, update
 export async function createRule(req){
     try {
         const { ruleString, ruleName, description } = req.body;
+
+        validateSingleRule(ruleString);
+
         const existingRule = await Rule.findOne({ ruleString: ruleString.trim() });
 
 
@@ -51,14 +54,22 @@ export async function getRuleById(id){
     }
 }
 
-export async function evaluateRule(attributes){
+export async function evaluateRule(ruleId, attributes){
     try {
-        const rules = await getRulesRepository();
-            const combinedAST = combineRules(
-              rules.map((rule) => rule.ruleString)
-            );
-            const result = evaluateAST(combinedAST, attributes);
-            return result;
+      const rule = await Rule.findById(ruleId);
+
+      if (!rule) {
+        throw new Error("Rule not found");
+      }
+
+      const result = evaluateAST(rule.ast, attributes); // Assuming you have the evaluateAST function
+
+
+
+    //   const rules = await getRulesRepository();
+    //   const combinedAST = combineRules(rules.map((rule) => rule.ruleString));
+    //   const result = evaluateAST(combinedAST, attributes);
+      return result;
     } catch (error) {
         console.log("Error in evaluating rule in service layer", error);
         throw error;
@@ -85,3 +96,30 @@ export async function updateRule(ruleString, ruleName, description, id){
     }
 }
 
+export async function deleteRule(id){
+    try {
+        // check if rule exists:
+        const rule = await getRuleByIdRepository(id);
+        if (!rule) {
+            throw new Error("Rule not found");
+        }
+
+        const deletedRule = await Rule.findByIdAndDelete(id);
+        if (!deletedRule) {
+            throw new Error("Rule not found");
+        }
+
+        return deletedRule;
+    } catch (error) {
+        
+    }
+}
+
+
+    const validateSingleRule = (rule) => {
+        const ruleRegex = /^[A-Z]+\s+.+\s+WHERE\s+.+$/i;
+
+        if (!ruleRegex.test(rule)) {
+        throw new Error(`Invalid rule syntax for single rule: ${rule}`);
+        }
+    };
