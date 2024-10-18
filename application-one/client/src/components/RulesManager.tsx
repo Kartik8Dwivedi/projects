@@ -11,7 +11,7 @@ const RuleManager = () => {
 
   const fetchRules = async () => {
     try {
-      const response = await axios.get("http://localhost:3030/api/v1/rules");
+      const response = await axios.get(import.meta.env.VITE_BACKEND_URI+"rules");
       setRules(response.data.data);
       console.log(rules);
     } catch (error) {
@@ -21,7 +21,9 @@ const RuleManager = () => {
 
   const deleteRule = async (id: number) => {
     try {
-      let response = await axios.delete(`http://localhost:3030/api/v1/rules/${id}`); 
+      let response = await axios.delete(
+        import.meta.env.VITE_BACKEND_URI + `rules/${id}`
+      ); 
       console.log(response);
       toast.success("Rule deleted successfully!");
       fetchRules();
@@ -33,7 +35,7 @@ const RuleManager = () => {
 
   const updateRule = async (id: number) => {
     try {
-      await axios.put(`http://localhost:3030/api/v1/rules/${id}`, {
+      await axios.put(import.meta.env.VITE_BACKEND_URI + `rules/${id}`, {
         ruleString: updatedRules[id],
       }); 
       setEditingRuleId(null); 

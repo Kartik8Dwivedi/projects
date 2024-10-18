@@ -16,7 +16,7 @@ const CombineRules = () => {
       const ruleArray = rule.split(",").map((item) => item.trim());
       console.log(ruleArray);
       const response = await axios.post(
-        "http://localhost:3030/api/v1/combine",
+        import.meta.env.VITE_BACKEND_URI + "combine",
         {
           ruleStrings: ruleArray,
         }
