@@ -1,4 +1,5 @@
 import { appError, appSuccess } from "../config/server.response.js";
+import { getWeatherData } from "../services/server.services.js";
 // import {
 
 // } from "../services/server.services.js";
@@ -24,6 +25,33 @@ class ServerController {
       return appError(obj);
     }
   }
+
+  async getWeatherData(req,res) {
+    try {
+        let results = await getWeatherData();
+        console.log("RESULTS IN CONTROLLER LAYER________________________", results);
+      const obj = {
+        res,
+        statusCode: 200,
+        data: results,
+        message: "Weather data fetched successfully",
+      };
+      return appSuccess(obj);
+    } catch (error) {
+      const obj = {
+        res,
+        statusCode: error.statusCode || 500,
+        error,
+        message: error.message || "Internal server error",
+      };
+      console.log(error);
+      return appError(obj);
+    }
+  }
+
+  async setThreshold(req,res) {}
+
+  async getDailySummaries(req,res) {}
 }
 
 export default ServerController;
