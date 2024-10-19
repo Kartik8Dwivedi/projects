@@ -15,8 +15,8 @@ router.get(
   authenticate,
   serverController.getWeatherHistory
 );
-router.post("/threshold", authenticate, serverController.setThreshold);
-router.get("/summaries", authenticate, serverController.getDailySummaries);
+router.post("/alerts", serverController.setAlertPreferences);
+router.get("/alerts/:userId", serverController.getAlertPreferences);
 
 router.get("/register", authController.register);
 router.get("/login", authController.login);
@@ -25,17 +25,7 @@ export default router;
 
 /**
 
-// Get Weather History for a specific city
-router.get('/history/:cityId', getWeatherHistory);
 
-// Get Daily Summary for a specific city
-router.get('/daily-summary/:cityId', getDailySummary);
-
-// Get Aggregated Data for a specific city
-router.get('/aggregated-data/:cityId', getAggregatedData);
-
-// Set Alert Preferences
-router.post('/alerts', setAlertPreferences);
 
 // Get Alert Preferences for a specific user
 router.get('/alerts/:userId', getAlertPreferences);

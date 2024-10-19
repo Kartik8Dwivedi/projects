@@ -1,5 +1,6 @@
 import axios from "axios";
 import CityWeather from "../model/weather.model.js";
+import User from "../model/user.model.js";
 import {
   OPENWEATHER_API_KEY,
   OPENWEATHER_URI,
@@ -206,5 +207,38 @@ export async function getWeatherHistory(cityId) {
       error
     );
     throw error;
+  }
+}
+
+export async function setAlertService(userId, thresholds) {
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $set: { alertPreferences: thresholds } },
+      { new: true, useFindAndModify: false }
+    );
+
+    if (!user) {
+      throw new CustomError("User not found", 404);
+    }
+
+    return user.alertPreferences;
+  } catch (error) {
+    res.status(500).json({ message: "Error saving alert preferences", error });
+  }
+}
+
+export async function getAlertPreferences(userId) {
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new CustomError("User not found", 404);
+    }
+
+    return user.alertPreferences;
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching alert preferences", error });
   }
 }
