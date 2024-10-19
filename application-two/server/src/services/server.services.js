@@ -79,6 +79,47 @@ export async function updateWeatherData() {
   console.log("Weather data updated successfully");
 }
 
+// aggregate daily summaries for each city
+export async function aggregateDailySummary() {
+  const cities = await CityWeather.find({});
+
+  for (const city of cities) {
+    const weatherHistory = city.weatherHistory;
+    if (!weatherHistory || weatherHistory.length === 0) continue;
+
+    // Calculate daily aggregates
+    const temps = weatherHistory.map((entry) => entry.temp);
+    const avgTemp = temps.reduce((sum, t) => sum + t, 0) / temps.length;
+    const maxTemp = Math.max(...temps);
+    const minTemp = Math.min(...temps);
+
+    // Calculate dominant weather condition
+    const weatherConditions = weatherHistory.flatMap((entry) =>
+      entry.weather.map((w) => w.main)
+    );
+    const dominantWeather = weatherConditions
+      .sort(
+        (a, b) =>
+          weatherConditions.filter((v) => v === a).length -
+          weatherConditions.filter((v) => v === b).length
+      )
+      .pop();
+
+    // Update daily summary in the database
+    city.dailySummary = {
+      avgTemp,
+      maxTemp,
+      minTemp,
+      dominantWeather,
+      timestamp: new Date(), // Use current time for daily summary timestamp
+    };
+
+    await city.save();
+  }
+
+  console.log("Daily summaries aggregated successfully");
+}
+
 // cron job for weather updates at every 15 minutes
 export async function startCronJob() {
   console.log("Starting the first weather update task...");
