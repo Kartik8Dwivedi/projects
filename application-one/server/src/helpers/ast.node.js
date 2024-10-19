@@ -35,42 +35,46 @@ export function parseRuleToAST(rule) {
       (tokens[index] === "AND" || tokens[index] === "OR")
     ) {
       const operator = tokens[index++];
-      const newNode = new ASTNode("operator", operator); 
+      const newNode = new ASTNode("operator", operator);
       newNode.left = node;
-      newNode.right = parseTerm();
+      newNode.right = parseTerm(); // Ensure that parseTerm captures the right expression correctly
       node = newNode;
     }
     return node;
   }
 
-  function parseTerm() {
-    if (tokens[index] === "(") {
-      index++; // Skip '('
-      const node = parseExpression();
-      index++; // Skip ')'
-      return node;
-    } else {
-      return parseFactor();
-    }
+function parseTerm() {
+  if (tokens[index] === "(") {
+    index++; // Skip '('
+    const node = parseExpression();
+    index++; // Skip ')'
+    return node;
+  } else {
+    return parseFactor();
+  }
+}
+
+function parseFactor() {
+  let condition = "";
+
+  while (
+    index < tokens.length &&
+    tokens[index] !== "AND" &&
+    tokens[index] !== "OR" &&
+    tokens[index] !== ")"
+  ) {
+    condition += tokens[index++] + " ";
   }
 
-  function parseFactor() {
-    let condition = "";
+  condition = condition.trim();
+  condition = condition.replace(/=/g, "=="); // Convert '=' to '=='
 
-    while (
-      index < tokens.length &&
-      tokens[index] !== "AND" &&
-      tokens[index] !== "OR" &&
-      tokens[index] !== ")"
-    ) {
-      condition += tokens[index++] + " ";
-    }
-
-    condition = condition.trim();
-    condition = condition.replace(/=/g, "==");
-
-    return new ASTNode("operand", condition);
+  if (!condition) {
+    throw new Error("Invalid condition");
   }
+
+  return new ASTNode("operand", condition);
+}
 
   return parseExpression();
 }

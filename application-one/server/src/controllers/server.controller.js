@@ -53,22 +53,35 @@ class ServerController {
 
     async evaluateRule(req,res) {
         try {
-          const ruleId = req.params.ruleId; // Get ruleId from URL params
-          const attributes = req.body.attributes; // Get attributes from request body
+            const { attributes, ruleIds } = req.body; 
 
-          if (!attributes || !ruleId) {
-            return appError(
-              res,
-              400,
-              {},
-              "Invalid input. Expected user attributes and rule ID."
-            );
-          }
-          const result = await evaluateRule(ruleId, attributes);
-          return appSuccess(res, 200, result, "Rule evaluated successfully");
+            // Validate input
+            if (!attributes || typeof attributes !== "object") {
+                return res.status(400).json({ 
+                    error: "Invalid input. Expected user attributes object.",
+                    message: "Invalid input. Expected user attributes object.",
+                    success: false,
+                    result: false
+                });
+            }
+            if (!ruleIds || !Array.isArray(ruleIds) || ruleIds.length === 0) {
+                return res.status(400).json({ 
+                    error: "Invalid input. Expected an array of rule ids.",
+                    message: "Invalid input. Expected an array of rule ids.",
+                    success: false,
+                    result: false
+                });
+            }
+            let evaluationResult = await evaluateRule(ruleIds, attributes);
+            return appSuccess(res, 200, evaluationResult, "Rules evaluated successfully");
         } catch (error) {
-            console.log(error);
-            return appError(res, 500, error, "Internal server error");
+            console.error("Error evaluating rules:", error);
+
+            return res.status(500).json({ error: error.message,
+                message: "Internal server error",
+                success: false,
+                result: false
+             });
         }
     }
 

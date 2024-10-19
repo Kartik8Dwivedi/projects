@@ -1,5 +1,6 @@
 import { ASTNode, combineRules, evaluateAST, parseRuleToAST } from "../helpers/ast.node.js";
 import { combineRulesHelper } from "../helpers/combineRules.js";
+import { parseRule } from "../helpers/parseRule.js";
 import Rule from "../model/rule.schema.js";
 
 import { createRuleRepository, getRuleByIdRepository, getRulesRepository, updateRuleRepository } from "../repository/server.repository.js";
@@ -60,22 +61,31 @@ export async function getRuleById(id){
     }
 }
 
-export async function evaluateRule(ruleId, attributes){
+export async function evaluateRule(ruleIds, attributes){
     try {
-      const rule = await Rule.findById(ruleId);
+      // Fetch rules from the database based on the provided rule IDs
+      const rules = await Rule.find({ _id: { $in: ruleIds } });
+      console.log("RULES: ", rules);
 
-      if (!rule) {
-        throw new Error("Rule not found");
+      // If any rule ID is not found, return an error
+      if (rules.length !== ruleIds.length) {
+        throw new Error("One or more rules not found with the given IDs.");
       }
 
-      const result = evaluateAST(rule.ast, attributes); // Assuming you have the evaluateAST function
+      // Extract the rule strings from the rules
+      const ruleStrings = rules.map((rule) => rule.ruleString);
+      console.log("RULE STRINGS: ", ruleStrings);
 
+      // Combine the ASTs of the fetched rules
+      const combinedAST = combineRulesInOne(ruleStrings);
+      console.log("COMBINED AST: ", combinedAST);
 
+      // Evaluate the combined AST with the provided attributes
+      const evaluationResult = evaluateAllASTTrees(combinedAST, attributes);
+        console.log("EVALUATION RESULT: ", evaluationResult);
 
-    //   const rules = await getRulesRepository();
-    //   const combinedAST = combineRules(rules.map((rule) => rule.ruleString));
-    //   const result = evaluateAST(combinedAST, attributes);
-      return result;
+      // Return the evaluation result (boolean)
+      return evaluationResult;
     } catch (error) {
         console.log("Error in evaluating rule in service layer", error);
         throw error;
@@ -156,4 +166,60 @@ export async function combineTrees(ruleStrings) {
         // if (!ruleRegex.test(rule)) {
         // throw new Error(`Invalid rule syntax for single rule: ${rule}`);
         // }
+    };
+
+    const combineRulesInOne = (ruleStrings) => {
+        const asts = ruleStrings.map((rule) => parseRule(rule));
+
+        // Combine two ASTs using the AND operator
+        const combineTwoASTs = (ast1, ast2) => {
+          const combinedAST = {
+            type: "operator",
+            value: "AND",
+            left: ast1,
+            right: ast2,
+          };
+          return combinedAST;
+        };
+
+        // Combine all ASTs into one
+        let combinedAST = asts[0];
+        for (let i = 1; i < asts.length; i++) {
+          combinedAST = combineTwoASTs(combinedAST, asts[i]);
+        }
+
+        return combinedAST;
+    }
+
+    const evaluateAllASTTrees = (ast,attributes) => {
+        if (ast.type === "operand") {
+          const condition = ast.value;
+          return evalCondition(condition, attributes);
+        }
+
+        if (ast.type === "operator") {
+          const leftResult = evaluateAST(ast.left, attributes);
+          const rightResult = evaluateAST(ast.right, attributes);
+
+          if (ast.value === "AND") {
+            return leftResult && rightResult;
+          } else if (ast.value === "OR") {
+            return leftResult || rightResult;
+          }
+        }
+
+        return false;
+    }
+
+    const evalCondition = (condition, attributes) => {
+      const evaluatedCondition = condition.replace(/\b\w+\b/g, (match) => {
+        return attributes.hasOwnProperty(match) ? attributes[match] : match;
+      });
+
+      try {
+        return eval(evaluatedCondition);
+      } catch (error) {
+        console.error("Error evaluating condition:", error);
+        return false;
+      }
     };
