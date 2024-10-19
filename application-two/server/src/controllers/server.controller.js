@@ -1,8 +1,9 @@
 import { appError, appSuccess } from "../config/server.response.js";
-import { getWeatherData } from "../services/server.services.js";
-// import {
-
-// } from "../services/server.services.js";
+import {
+  getCurrentWeather,
+  getWeatherData,
+  getWeatherHistory,
+} from "../services/server.services.js";
 
 class ServerController {
   async default_(req, res) {
@@ -20,6 +21,60 @@ class ServerController {
         statusCode: 500,
         error,
         message: "Internal server error",
+      };
+      console.log(error);
+      return appError(obj);
+    }
+  }
+
+  async getCurrentWeather(req, res) {
+    try {
+      let results = await getCurrentWeather();
+      const obj = {
+        res,
+        statusCode: 200,
+        data: results,
+        message: "Weather data fetched successfully",
+      };
+      return appSuccess(obj);
+    } catch (error) {
+      const obj = {
+        res,
+        statusCode: error.statusCode || 500,
+        error,
+        message: error.message || "Internal server error",
+      };
+      console.log(error);
+      return appError(obj);
+    }
+  }
+
+  async getWeatherHistory(req, res) {
+    try {
+      const { cityId } = req.params;
+      if (!cityId) {
+        let obj = {
+          res,
+          statusCode: 400,
+          error: {},
+          message: "City ID is required",
+        };
+        return appError(obj);
+      }
+      let results = await getWeatherHistory(cityId);
+      const obj = {
+        res,
+        statusCode: 200,
+        data: results,
+        message: "Weather history fetched successfully",
+      };
+      return appSuccess(obj);
+    } catch (error) {
+      const obj = {
+        res,
+        statusCode: error.statusCode || 500,
+        error,
+        message: error.message || "Internal server error",
       };
       console.log(error);
       return appError(obj);

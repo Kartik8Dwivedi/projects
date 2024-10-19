@@ -5,6 +5,7 @@ import {
   OPENWEATHER_URI,
 } from "../config/server.config.js";
 import cron from "node-cron";
+import CustomError from "../helpers/CustomError.js";
 
 // get weather data for all six cities
 export async function getWeatherData() {
@@ -51,8 +52,8 @@ export async function updateWeatherData() {
     const tempMinCelsius = temp_min - 273.15;
     const tempMaxCelsius = temp_max - 273.15;
 
-    const cityRecord = await CityWeather.findOneAndUpdate(
-      { cityId }, // Find city by its ID
+    await CityWeather.findOneAndUpdate(
+      { cityId },
       {
         cityName,
         coordinates: { lon, lat },
@@ -85,7 +86,13 @@ export async function aggregateDailySummary() {
 
   for (const city of cities) {
     const weatherHistory = city.weatherHistory;
-    if (!weatherHistory || weatherHistory.length === 0) continue;
+
+    if (!weatherHistory || weatherHistory.length === 0) {
+      console.log(`No weather history for city: ${city.cityName}`);
+      continue; // Skip to the next city if no history exists
+    }
+
+    console.log("Weather history for city:", weatherHistory);
 
     // Calculate daily aggregates
     const temps = weatherHistory.map((entry) => entry.temp);
@@ -105,16 +112,31 @@ export async function aggregateDailySummary() {
       )
       .pop();
 
-    // Update daily summary in the database
-    city.dailySummary = {
+    // Ensure the dailyAggregates array is initialized
+    if (!city.aggregatedData.dailyAggregates) {
+      city.aggregatedData.dailyAggregates = []; // Initialize if empty
+    }
+
+    // Create a new daily aggregate entry
+    const dailyAggregateEntry = {
+      date: new Date(), // Use the current date
       avgTemp,
       maxTemp,
       minTemp,
       dominantWeather,
-      timestamp: new Date(), // Use current time for daily summary timestamp
     };
 
-    await city.save();
+    // Add the new entry to the dailyAggregates array
+    city.aggregatedData.dailyAggregates.push(dailyAggregateEntry);
+
+    try {
+      await city.save(); // Save updated city data with new aggregate
+      console.log(
+        "Daily aggregate entry added and city data saved successfully."
+      );
+    } catch (error) {
+      console.error("Error saving city data:", error);
+    }
   }
 
   console.log("Daily summaries aggregated successfully");
@@ -130,4 +152,59 @@ export async function startCronJob() {
     console.log("Running scheduled weather update task...");
     await updateWeatherData();
   });
+}
+
+export async function startCronAggregation() {
+  cron.schedule("0 * * * *", async () => {
+    try {
+      console.log("Starting daily summary aggregation...");
+      await aggregateDailySummary();
+      console.log("Daily summary aggregation completed.");
+    } catch (error) {
+      console.error("Error during daily summary aggregation:", error);
+    }
+  });
+}
+
+// cleanup weather data to maintain size limit
+export async function cleanupWeatherData() {
+  const cities = await CityWeather.find({});
+  for (const city of cities) {
+    if (city.weatherHistory && city.weatherHistory.length > 12) {
+      city.weatherHistory = city.weatherHistory.slice(-12);
+      await city.save();
+    }
+  }
+  console.log(
+    "Cleanup of weather data completed, ensuring size limit is maintained."
+  );
+}
+
+export async function getCurrentWeather() {
+  try {
+    const cities = await CityWeather.find({});
+    return cities;
+  } catch (error) {
+    console.log(
+      "Error in fetching current weather data in service layer",
+      error
+    );
+    throw error;
+  }
+}
+
+export async function getWeatherHistory(cityId) {
+  try {
+    const city = await CityWeather.findOne({ cityId });
+    if (!city) {
+      throw new CustomError("City not found", 404);
+    }
+    return city.weatherHistory;
+  } catch (error) {
+    console.log(
+      "Error in fetching weather history data in service layer",
+      error
+    );
+    throw error;
+  }
 }
