@@ -7,29 +7,28 @@ import { getWeatherData } from "../services/server.services.js";
 class ServerController {
   async default_(req, res) {
     try {
-        const obj = {
-            res,
-            statusCode: 200,
-            data: {},
-            message: "Server is up and running"
-        }
+      const obj = {
+        res,
+        statusCode: 200,
+        data: {},
+        message: "Server is up and running",
+      };
       return appSuccess(obj);
     } catch (error) {
-        const obj = {
-            res,
-            statusCode: 500,
-            error,
-            message: "Internal server error"
-        }
+      const obj = {
+        res,
+        statusCode: 500,
+        error,
+        message: "Internal server error",
+      };
       console.log(error);
       return appError(obj);
     }
   }
 
-  async getWeatherData(req,res) {
+  async getWeatherData(req, res) {
     try {
-        let results = await getWeatherData();
-        console.log("RESULTS IN CONTROLLER LAYER________________________", results);
+      let results = await getWeatherData();
       const obj = {
         res,
         statusCode: 200,
@@ -49,9 +48,9 @@ class ServerController {
     }
   }
 
-  async setThreshold(req,res) {}
+  async setThreshold(req, res) {}
 
-  async getDailySummaries(req,res) {}
+  async getDailySummaries(req, res) {}
 }
 
 export default ServerController;

@@ -78,3 +78,15 @@ export async function updateWeatherData() {
 
   console.log("Weather data updated successfully");
 }
+
+// cron job for weather updates at every 15 minutes
+export async function startCronJob() {
+  console.log("Starting the first weather update task...");
+  await updateWeatherData();
+
+  // cron for subsequent updates every 15 minutes
+  cron.schedule("*/15 * * * *", async () => {
+    console.log("Running scheduled weather update task...");
+    await updateWeatherData();
+  });
+}
