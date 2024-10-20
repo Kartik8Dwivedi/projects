@@ -124,8 +124,39 @@ This project monitors weather conditions for six cities, allowing users to set n
 - Ensuring smooth user experience with **real-time alerts**, **daily rollups**, **dynamic notifictions** and **real time data fetching**.
 
 ## Setup Instructions
+- Note: The **environment variables** are *deliberately pushed to the github repository* for the ease of setup and testing. In **production**, these should be stored in a .env file and added to the .gitignore file.
+
 1. Clone the repository and navigate to the project folder.
 ```shell 
 git clone https://github.com/Kartik8Dwivedi/projects
-cd projects
+cd application-two
 ```
+
+2. Install dependencies for Backend
+```shell
+cd server
+npm install
+```
+
+3. Start the backend server
+```shell
+npm run dev
+```
+Now the server is up and running on port 3030. 
+
+4. Now open another fresh terminala and let's start the fontend.
+```shell
+cd application-two
+cd client
+```
+5. Installing dependencies for Frontend
+```shell
+npm install
+```
+6. Start the frontend server
+```shell
+npm run dev
+```
+Now the frontend server is up and running. Open the browser and navigate to http://localhost:5173 to view the application.
+
+
