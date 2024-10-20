@@ -267,25 +267,17 @@ export const checkThresholdsAndNotify = async () => {
         cityId: user.preferredCityId,
       });
 
-
       if (!cityWeather) continue;
 
       const latestWeather = cityWeather.weatherHistory.slice(-1)[0];
 
-      
-      
       let shouldSendAlert = false;
       let alertMessage = "";
-      
+
       // Check if it's been at least 24 hours since the last alert for this user
       const timeNow = new Date();
       const timeLimit = 60 * 60 * 1000; // 24 hours in milliseconds
-      
-      console.log("latestWeather.temp", latestWeather.temp);
-      console.log(
-        "user.thresholds.temperature.min", 
-        user.thresholds.temperature.min
-      );
+
       // Check temperature thresholds
       if (
         user.thresholds.temperature.min !== null &&
@@ -356,4 +348,15 @@ export const startCronNofications = async () => {
     console.log("Running threshold check...");
     await checkThresholdsAndNotify();
   });
+};
+
+export const getWeatherDataByCity = async (city) => {
+  try {
+    const URI = `${OPENWEATHER_URI}?q=${city}&appid=${OPENWEATHER_API_KEY}`;
+    const response = await axios.get(URI);
+    return response.data;
+  } catch (error) {
+    console.log("Error in fetching weather data by city", error);
+    throw error;
+  }
 };

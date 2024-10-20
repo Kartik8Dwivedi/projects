@@ -3,6 +3,7 @@ import {
   getAlertPreferences,
   getCurrentWeather,
   getWeatherData,
+  getWeatherDataByCity,
   getWeatherHistory,
   setAlertService,
 } from "../services/server.services.js";
@@ -109,7 +110,7 @@ class ServerController {
     try {
       const { token, thresholds, preferredCityId } = req.body;
       // Example payload: { userId: '123', thresholds: { minTemp: 15, maxTemp: 30 } }
-      
+
       if (!token || !thresholds) {
         let obj = {
           res,
@@ -161,6 +162,38 @@ class ServerController {
       return appSuccess(obj);
     } catch (error) {
       console.log("Error in getting alert preferences", error);
+      const obj = {
+        res,
+        statusCode: error.statusCode || 500,
+        error,
+        message: error.message || "Internal server error",
+      };
+      return appError(obj);
+    }
+  }
+
+  async getDataByCity(req, res) {
+    try {
+      let city = req.query.city;
+      if (!city) {
+        let obj = {
+          res,
+          statusCode: 400,
+          error: {},
+          message: "City is required",
+        };
+        return appError(obj);
+      }
+      let results = await getWeatherDataByCity(city);
+      const obj = {
+        res,
+        statusCode: 200,
+        data: results,
+        message: "Weather data fetched successfully",
+      };
+      return appSuccess(obj);
+    } catch (error) {
+      console.log("Error in getting data by city", error);
       const obj = {
         res,
         statusCode: error.statusCode || 500,

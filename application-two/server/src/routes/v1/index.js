@@ -10,6 +10,7 @@ const router = Router();
 
 router.get("/authenticate", authenticate, serverController.default_);
 router.get("/data", authenticate, serverController.getCurrentWeather);
+router.get("/", authenticate, serverController.getDataByCity);
 router.get(
   "/history/:cityId",
   authenticate,
