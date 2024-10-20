@@ -27,7 +27,7 @@ app.use(morgan("combined"));
 app.use("/api", ApiRoutes);
 
 app.all("*", (req, res) => {
-  res.status(200).send("<div>OOPS! 404 page not found</div>");
+  res.status(404).send("<div>OOPS! 404 page not found</div>");
 });
 
 app.use(errorMiddleware);

@@ -2,13 +2,13 @@ import User from "../model/user.model.js";
 import CustomError from "../helpers/CustomError.js";
 import jwt from "jsonwebtoken";
 
-export async function registerService(email, password) {
+export async function registerService(email, password, name, preferredCityId) {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       throw new CustomError("User already exists", 411);
     }
-    const newUser = new User({ email, password });
+    const newUser = new User({ email, password, name, preferredCityId });
     await newUser.save();
     newUser.password = undefined;
     return newUser;

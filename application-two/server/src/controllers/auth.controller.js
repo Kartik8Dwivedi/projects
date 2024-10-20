@@ -26,8 +26,25 @@ class AuthController {
   }
   async register(req, res) {
     try {
-      const { email, password } = req.body;
-      const response = await registerService(email, password);
+      let { email, password, name, preferredCityId } = req.body;
+      if (!email || !password || !name) {
+        let obj = {
+          res,
+          statusCode: 400,
+          message:
+            "Please provide all required fields, email, password and name (preferredCityId is optional)",
+        };
+        return appError(obj);
+      }
+      if (!preferredCityId) {
+        preferredCityId = 1273294; // default city is set to Delhi
+      }
+      const response = await registerService(
+        email,
+        password,
+        name,
+        preferredCityId
+      );
       let obj = {
         res,
         statusCode: 201,
