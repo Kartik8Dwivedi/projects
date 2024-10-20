@@ -2,11 +2,14 @@ import axios from "axios";
 import CityWeather from "../model/weather.model.js";
 import User from "../model/user.model.js";
 import {
+  E,
+  EP,
   OPENWEATHER_API_KEY,
   OPENWEATHER_URI,
 } from "../config/server.config.js";
 import cron from "node-cron";
 import CustomError from "../helpers/CustomError.js";
+import nodemailer from "nodemailer";
 
 // get weather data for all six cities
 export async function getWeatherData() {
@@ -242,3 +245,104 @@ export async function getAlertPreferences(userId) {
       .json({ message: "Error fetching alert preferences", error });
   }
 }
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: E,
+    pass: EP,
+  },
+});
+
+export const checkThresholdsAndNotify = async () => {
+  try {
+    const users = await User.find({});
+    console.log("Checking thresholds and sending notifications...");
+
+    for (const user of users) {
+      const cityWeather = await CityWeather.findOne({
+        cityId: user.preferredCityId,
+      });
+
+      if (!cityWeather) continue;
+
+      const latestWeather = cityWeather.weatherHistory.slice(-1)[0];
+
+      let shouldSendAlert = false;
+      let alertMessage = "";
+
+      // Check if it's been at least 24 hours since the last alert for this user
+      const timeNow = new Date();
+      const timeLimit = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+      // Check temperature thresholds
+      if (
+        user.thresholds.temperature.min !== null &&
+        latestWeather.temp < user.thresholds.temperature.min &&
+        (!user.lastAlert ||
+          timeNow - user.lastAlert.temperature.min > timeLimit)
+      ) {
+        shouldSendAlert = true;
+        alertMessage += `Temperature dropped below ${user.thresholds.temperature.min}°C.\n`;
+        user.lastAlert.temperature.min = timeNow; // Update the last alert timestamp
+      }
+      if (
+        user.thresholds.temperature.max !== null &&
+        latestWeather.temp > user.thresholds.temperature.max &&
+        (!user.lastAlert ||
+          timeNow - user.lastAlert.temperature.max > timeLimit)
+      ) {
+        shouldSendAlert = true;
+        alertMessage += `Temperature exceeded ${user.thresholds.temperature.max}°C.\n`;
+        user.lastAlert.temperature.max = timeNow; // Update the last alert timestamp
+      }
+
+      // Check weather condition thresholds
+      if (
+        user.thresholds.weatherCondition &&
+        latestWeather.weather.some(
+          (w) => w.main === user.thresholds.weatherCondition
+        ) &&
+        (!user.lastAlert ||
+          timeNow - user.lastAlert.weatherCondition > timeLimit)
+      ) {
+        shouldSendAlert = true;
+        alertMessage += `Weather condition: ${user.thresholds.weatherCondition} detected.\n`;
+        user.lastAlert.weatherCondition = timeNow; // Update the last alert timestamp
+      }
+
+      // Send alert if necessary
+      if (shouldSendAlert) {
+        console.log("Sending email to", user.email);
+        await transporter.sendMail({
+          from: process.env.EMAIL,
+          to: user.email,
+          subject: "Weather Alert Notification",
+          text: `Dear ${user.name},\n\n${alertMessage}\nStay safe!\n\nBest regards,\nWeather Monitoring App`,
+        });
+        console.log("Email sent to", user.email);
+
+        // Track the alert in user's notifications
+        user.alerts.push({
+          type: "ThresholdAlert",
+          triggeredAt: new Date(),
+          notificationSent: true,
+        });
+        await user.save();
+      }
+    }
+  } catch (error) {
+    console.error(
+      "Error checking thresholds and sending notifications:",
+      error
+    );
+  }
+};
+
+export const startCronNofications = async () => {
+  await checkThresholdsAndNotify();
+  cron.schedule("*/15 * * * *", async () => {
+    console.log("Running threshold check...");
+    await checkThresholdsAndNotify();
+  });
+};

@@ -5,6 +5,7 @@ const userSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  preferredCityId: { type: Number, required: true },
   thresholds: {
     temperature: {
       min: { type: Number, default: null },
@@ -12,11 +13,18 @@ const userSchema = new Schema({
     },
     weatherCondition: { type: String, default: null },
   },
+  lastAlert: {
+    temperature: {
+      min: { type: Date, default: null },
+      max: { type: Date, default: null },
+    },
+    weatherCondition: { type: Date, default: null },
+  },
   alerts: [
     {
-      type: { type: String }, // 'Temperature', 'WeatherCondition'
+      type: { type: String },
       triggeredAt: { type: Date },
-      notificationSent: { type: Boolean, default: false },
+      notificationSent: { type: Boolean },
     },
   ],
 });

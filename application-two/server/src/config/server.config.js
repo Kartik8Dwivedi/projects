@@ -13,3 +13,6 @@ export const OPENWEATHER_URI =
   "https://api.openweathermap.org/data/2.5/weather";
 
 export const JWT_SECRET = process.env.JWT_SECRET || "aefihuaiujhboiuvhado";
+
+export const E = process.env.E || "smtp.ethereal.email";
+export const EP = process.env.EP || "smtp.ethereal.email";
