@@ -118,7 +118,14 @@ This project monitors weather conditions for six cities, allowing users to set n
     - **Middleware** for verifying user roles and permissions.
     - V2 of the application can include **OAuth** for third-party authentication.
 
-#### Challenges Faced:
+### **Challenges Faced**:
 - Managing **high-frequency** weather data **efficiently** without exceeding storage limits.
 - Designing the **aggregation** mechanism without altering raw data required for future computations. **(Utilized sliding window technique)**
 - Ensuring smooth user experience with **real-time alerts**, **daily rollups**, **dynamic notifictions** and **real time data fetching**.
+
+## Setup Instructions
+1. Clone the repository and navigate to the project folder.
+```shell 
+git clone https://github.com/Kartik8Dwivedi/projects
+cd projects
+```
