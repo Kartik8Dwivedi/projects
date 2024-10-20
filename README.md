@@ -4,8 +4,8 @@
 
 This project consists of two separate applications:
 
-1. [Rule Engine with AST (Abstract Syntax Tree)](#rule-engine-with-ast)
-2. [Real-time Data Processing System for Weather Monitoring with Rollups and Aggregates](#weather-monitoring-application)
+1. [Rule Engine with AST (Abstract Syntax Tree)](#application-1--rule-engine-with-ast)
+2. [Real-time Data Processing System for Weather Monitoring with Rollups and Aggregates](#application-2--weather-monitoring-application)
 
 # Application 1 : Rule Engine with AST
 
@@ -32,7 +32,10 @@ This project consists of two separate applications:
 - POST /combine - Combine multiple rules
 
 # Application 2 : Weather Monitoring Application
-This project monitors weather conditions for six cities, allowing users to set notifications for specific weather thresholds. The system aggregates historical data to efficiently manage and store weather data, while ensuring users are notified promptly about critical conditions.
+- This project monitors weather conditions for **six cities** (**problem statement constraint**), allowing users to set **notifications** for specific weather **thresholds**. The system **aggregates** historical data to efficiently manage and store weather data, while ensuring users are notified promptly about **critical conditions**.
+- This project is **end to end deployed and hosted** on **vercel's** platform, the fullstack application can be accessed from here: [**[Link]**](https://zeotap-project-two-client.vercel.app/)
+- The backend is hosted on vercel and can be accessed from here: [**[Link]**](https://zeotap-project-two.vercel.app/api/v1)
+
 ### Key Features
 
 ### 1. **Real-Time Weather Fetching**
@@ -70,7 +73,43 @@ This project monitors weather conditions for six cities, allowing users to set n
 - **Daily Aggregates**: Summarized daily insights with minimal storage usage.
 - **Real-Time Alerts**: Configurable alerts based on user-defined weather conditions.
 
-### Design Decisions:
+## Setup Instructions
+- Note: The **environment variables** are *deliberately pushed to the github repository* for the ease of setup and testing. In **production**, these should be stored in a .env file and added to the .gitignore file.
+
+1. Clone the repository and navigate to the project folder.
+```shell 
+git clone https://github.com/Kartik8Dwivedi/projects
+cd application-two
+```
+
+2. Install dependencies for Backend
+```shell
+cd server
+npm install
+```
+
+3. Start the backend server
+```shell
+npm run dev
+```
+Now the server is up and running on port 3030. 
+
+4. Now open another fresh terminala and let's start the fontend.
+```shell
+cd application-two
+cd client
+```
+5. Installing dependencies for Frontend
+```shell
+npm install
+```
+6. Start the frontend server
+```shell
+npm run dev
+```
+Now the frontend server is up and running. Open the browser and navigate to http://localhost:5173 to view the application.
+
+## **Design Decisions:**
 
 #### **Tech Stack :**
 - **Backend: Node.js, Express.js, MongoDB**
@@ -123,40 +162,14 @@ This project monitors weather conditions for six cities, allowing users to set n
 - Designing the **aggregation** mechanism without altering raw data required for future computations. **(Utilized sliding window technique)**
 - Ensuring smooth user experience with **real-time alerts**, **daily rollups**, **dynamic notifictions** and **real time data fetching**.
 
-## Setup Instructions
-- Note: The **environment variables** are *deliberately pushed to the github repository* for the ease of setup and testing. In **production**, these should be stored in a .env file and added to the .gitignore file.
 
-1. Clone the repository and navigate to the project folder.
-```shell 
-git clone https://github.com/Kartik8Dwivedi/projects
-cd application-two
-```
 
-2. Install dependencies for Backend
-```shell
-cd server
-npm install
-```
-
-3. Start the backend server
-```shell
-npm run dev
-```
-Now the server is up and running on port 3030. 
-
-4. Now open another fresh terminala and let's start the fontend.
-```shell
-cd application-two
-cd client
-```
-5. Installing dependencies for Frontend
-```shell
-npm install
-```
-6. Start the frontend server
-```shell
-npm run dev
-```
-Now the frontend server is up and running. Open the browser and navigate to http://localhost:5173 to view the application.
-
+## **Future Advancements**
+- We had a **major constraint** that we were focussing majorly upon the **six metro cities** of India, we can expand our application to include more cities.
+- **OAuth Integration**: Implement OAuth for secure third-party authentication.
+- **User Preferences**: Allow users to set preferences for notifications and alerts.
+- **Data Visualization**: Implement charts and graphs for better data representation. We have used **TailwindCSS** for UI, we can use **D3.js** for data visualization.
+- **Geolocation Integration**: Use geolocation to fetch weather data based on user location.
+- **Historical Data Analysis**: Implement historical data analysis for trend forecasting.
+- **Machine Learning**: Implement ML models for weather prediction and anomaly detection.
 
