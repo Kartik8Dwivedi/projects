@@ -13,8 +13,8 @@ class ServerController {
       const obj = {
         res,
         statusCode: 200,
-        data: {},
-        message: "Server is up and running",
+        data: true,
+        message: "Authenticated",
       };
       return appSuccess(obj);
     } catch (error) {
@@ -105,28 +105,25 @@ class ServerController {
     }
   }
 
-  async setThreshold(req, res) {}
-
-  async getDailySummaries(req, res) {}
-
   async setAlertPreferences(req, res) {
     try {
-      const { userId, thresholds } = req.body;
+      const { token, thresholds, preferredCityId } = req.body;
       // Example payload: { userId: '123', thresholds: { minTemp: 15, maxTemp: 30 } }
-      if (!userId || !thresholds) {
+      
+      if (!token || !thresholds) {
         let obj = {
           res,
           statusCode: 400,
           error: {},
-          message: "User ID and thresholds are required",
+          message: "token and thresholds are required",
         };
         return appError(obj);
       }
-      let res = await setAlertService(userId, thresholds);
+      let result = await setAlertService(token, thresholds, preferredCityId);
       const obj = {
         res,
         statusCode: 200,
-        data: res,
+        data: result,
         message: "Alert preferences saved successfully",
       };
       return appSuccess(obj);

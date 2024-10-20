@@ -10,6 +10,7 @@ import {
 import cron from "node-cron";
 import CustomError from "../helpers/CustomError.js";
 import nodemailer from "nodemailer";
+import jwt from "jsonwebtoken";
 
 // get weather data for all six cities
 export async function getWeatherData() {
@@ -213,11 +214,13 @@ export async function getWeatherHistory(cityId) {
   }
 }
 
-export async function setAlertService(userId, thresholds) {
+export async function setAlertService(token, thresholds, preferredCityId) {
   try {
+    const userId = jwt.verify(token, process.env.JWT_SECRET).id;
+    console.log(userId, thresholds, preferredCityId);
     const user = await User.findByIdAndUpdate(
       userId,
-      { $set: { alertPreferences: thresholds } },
+      { $set: { thresholds: thresholds }, preferredCityId },
       { new: true, useFindAndModify: false }
     );
 
@@ -225,9 +228,9 @@ export async function setAlertService(userId, thresholds) {
       throw new CustomError("User not found", 404);
     }
 
-    return user.alertPreferences;
+    return user.thresholds;
   } catch (error) {
-    res.status(500).json({ message: "Error saving alert preferences", error });
+    throw new CustomError("Error setting alert preferences", 500);
   }
 }
 
@@ -264,17 +267,25 @@ export const checkThresholdsAndNotify = async () => {
         cityId: user.preferredCityId,
       });
 
+
       if (!cityWeather) continue;
 
       const latestWeather = cityWeather.weatherHistory.slice(-1)[0];
 
+      
+      
       let shouldSendAlert = false;
       let alertMessage = "";
-
+      
       // Check if it's been at least 24 hours since the last alert for this user
       const timeNow = new Date();
-      const timeLimit = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-
+      const timeLimit = 60 * 60 * 1000; // 24 hours in milliseconds
+      
+      console.log("latestWeather.temp", latestWeather.temp);
+      console.log(
+        "user.thresholds.temperature.min", 
+        user.thresholds.temperature.min
+      );
       // Check temperature thresholds
       if (
         user.thresholds.temperature.min !== null &&

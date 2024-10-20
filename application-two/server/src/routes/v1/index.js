@@ -8,7 +8,7 @@ const authController = new AuthController();
 
 const router = Router();
 
-router.get("/", authenticate, serverController.default_);
+router.get("/authenticate", authenticate, serverController.default_);
 router.get("/data", authenticate, serverController.getCurrentWeather);
 router.get(
   "/history/:cityId",
@@ -19,8 +19,8 @@ router.post("/alerts", serverController.setAlertPreferences);
 router.get("/alerts/:userId", serverController.getAlertPreferences);
 
 router.post("/register", authController.register);
-router.post("/login", authController.login);
-
+router.post("/login", authController.login); 
+ 
 export default router;
 
 /**

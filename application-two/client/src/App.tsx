@@ -1,26 +1,23 @@
-import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import Dashboard from "./components/Dashboard/Dashboard";
+import Threshold from "./components/Threshold/Threshold";
 
 function App() {
-  const token = localStorage.getItem("token");
-
-  axios
-    .get(import.meta.env.VITE_BACKEND_URI + `/data`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  toast.success("Welcome to the Weather App!");
+    toast( 
+    "Click on these cards to checkout the aggregated results of the day!\n\nIt is updated at every hour, hence it gives a better understanding of the weather conditions.",
+    {
+      duration: 6000,
+    }
+  );
   return (
-    <>
-      <div>
-        <p className="text-red-600">Hello there</p>
+    <div className="overflow-hidden">
+      <Toaster position="bottom-right" reverseOrder={false} />
+      <div className="flex flex-col justify-center items-center w-screen h-full overflow-hidden">
+        <Threshold />
+        <Dashboard />
       </div>
-    </>
+    </div>
   );
 }
 
