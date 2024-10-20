@@ -1,5 +1,6 @@
 import CombineRules from "./CombineRules/CombineRules";
 import CreateRule from "./CreateRule";
+import RuleEvaluationForm from "./RuleEvaluation/RuleEvaluation";
 import RuleManager from "./RulesManager";
 
 const HeroSection = () => {
@@ -46,7 +47,7 @@ const HeroSection = () => {
           role="tabpanel"
           className="tab-content bg-base-100 border-base-300 rounded-box p-6"
         >
-          Tab content 3
+          <RuleEvaluationForm />
         </div>
 
         <input

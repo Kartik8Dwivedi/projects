@@ -15,7 +15,7 @@ const CreateRule = () => {
     }
 
     try {
-      const response = await axios.post("https://zeotap-project-one.vercel.app/api/v1/rules", {ruleString:rule});
+      const response = await axios.post(import.meta.env.VITE_BACKEND_URI + "/rules", {ruleString:rule});
 
       if (response.status !== 200 && response.status !== 201) {
         setSubmit(false);

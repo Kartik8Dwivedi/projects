@@ -55,23 +55,6 @@ class ServerController {
         try {
             const { attributes, ruleIds } = req.body; 
 
-            // Validate input
-            if (!attributes || typeof attributes !== "object") {
-                return res.status(400).json({ 
-                    error: "Invalid input. Expected user attributes object.",
-                    message: "Invalid input. Expected user attributes object.",
-                    success: false,
-                    result: false
-                });
-            }
-            if (!ruleIds || !Array.isArray(ruleIds) || ruleIds.length === 0) {
-                return res.status(400).json({ 
-                    error: "Invalid input. Expected an array of rule ids.",
-                    message: "Invalid input. Expected an array of rule ids.",
-                    success: false,
-                    result: false
-                });
-            }
             let evaluationResult = await evaluateRule(ruleIds, attributes);
             return appSuccess(res, 200, evaluationResult, "Rules evaluated successfully");
         } catch (error) {

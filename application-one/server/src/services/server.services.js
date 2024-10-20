@@ -1,5 +1,7 @@
+import CustomError from "../helpers/CustomError.js";
 import { ASTNode, combineRules, evaluateAST, parseRuleToAST } from "../helpers/ast.node.js";
 import { combineRulesHelper } from "../helpers/combineRules.js";
+import { combineRulesEvaluate, evaluateASTTree } from "../helpers/evaluate.js";
 import { parseRule } from "../helpers/parseRule.js";
 import Rule from "../model/rule.schema.js";
 
@@ -61,35 +63,53 @@ export async function getRuleById(id){
     }
 }
 
-export async function evaluateRule(ruleIds, attributes){
-    try {
-      // Fetch rules from the database based on the provided rule IDs
-      const rules = await Rule.find({ _id: { $in: ruleIds } });
-      console.log("RULES: ", rules);
+export async function evaluateRule(ruleIds, attributes) {
+  try {
+    const rules = await Rule.find({ _id: { $in: ruleIds } });
 
-      // If any rule ID is not found, return an error
-      if (rules.length !== ruleIds.length) {
-        throw new Error("One or more rules not found with the given IDs.");
-      }
-
-      // Extract the rule strings from the rules
-      const ruleStrings = rules.map((rule) => rule.ruleString);
-      console.log("RULE STRINGS: ", ruleStrings);
-
-      // Combine the ASTs of the fetched rules
-      const combinedAST = combineRulesInOne(ruleStrings);
-      console.log("COMBINED AST: ", combinedAST);
-
-      // Evaluate the combined AST with the provided attributes
-      const evaluationResult = evaluateAllASTTrees(combinedAST, attributes);
-        console.log("EVALUATION RESULT: ", evaluationResult);
-
-      // Return the evaluation result (boolean)
-      return evaluationResult;
-    } catch (error) {
-        console.log("Error in evaluating rule in service layer", error);
-        throw error;
+    if (rules.length === 0) {
+      throw new CustomError("No valid rules found for the provided IDs", 404);
     }
+
+    // Extract rule strings from the retrieved rules
+    const ruleStrings = rules.map((rule) => rule.ruleString);
+
+    // Combine the rules into a single condition string
+    const combinedCondition = combineRulesFunction(ruleStrings);
+
+    // Evaluate the combined condition with attributes
+    const result = evaluateCondition(combinedCondition, attributes);
+
+    return result;
+  } catch (error) {
+    console.log("Error in evaluating rule in service layer", error);
+    throw error;
+  }
+}
+
+// Helper function to combine rule strings into a single condition
+function combineRulesFunction(ruleStrings) {
+  // Here, you might want to implement logic to combine the rule strings
+  // based on your specific requirements. For simplicity, let's join them with OR.
+  return ruleStrings.join(" || "); // Or use a different strategy based on your needs
+}
+
+// Your evaluateCondition function
+function evaluateCondition(condition, attributes) {
+  const sanitizedCondition = condition
+    .replace(/AND/g, "&&")
+    .replace(/OR/g, "||")
+    .replace(/=/g, "==")
+    .replace(/(?<!\w)([a-zA-Z_]\w*)(?!=)/g, (match) => {
+      return attributes.hasOwnProperty(match) ? attributes[match] : `undefined`;
+    });
+
+  try {
+    return eval(sanitizedCondition);
+  } catch (error) {
+    console.error("Error evaluating condition:", error);
+    return false;
+  }
 }
 
 export async function updateRule(ruleString, ruleName, description, id){
