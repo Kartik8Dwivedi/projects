@@ -65,6 +65,15 @@ This project consists of two separate applications:
     - **Daily Rollups**: Summarizes daily weather data at every hour.
     - **Alert Monitoring**: Checks for alerts every 15 minutes.
 
+### 6. **User Management**
+- **User Registration**: Allows users to register with their email and password.
+- **User Authentication**: JWT-based authentication for secure access.
+- **User Preferences**: Set alerts based on temperature thresholds.
+
+### 7. **Kelvin to Celsius Conversion**
+- Converts temperature from Kelvin to Celsius for better readability.
+- **Utilizes** the **formula**: `Celsius = Kelvin - 273.15`.
+
 ---
 
 ### Key Highlights:
@@ -114,9 +123,9 @@ Now the frontend server is up and running. Open the browser and navigate to http
 #### **Tech Stack :**
 - **Backend: Node.js, Express.js, MongoDB**
     - **MongoDB** for storing weather data with city-wise aggregation.
-    - ****Express.js** for API routing and handling requests.
-    - ****Node.js** for server side execution.
-    - Why ****MERN**? Single language across stack for faster development and ease of integration.
+    - **Express.js** for API routing and handling requests.
+    - **Node.js** for server side execution.
+    - Why **MERN**? Single language across stack for faster development and ease of integration.
 - **Frontend: React.js, TailwindCSS, DaisyUI**
     - **React.js** for dynamic UI rendering.
     - **TailwindCSS** for responsive and clean UI design.

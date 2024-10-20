@@ -276,7 +276,7 @@ export const checkThresholdsAndNotify = async () => {
 
       // Check if it's been at least 24 hours since the last alert for this user
       const timeNow = new Date();
-      const timeLimit = 60 * 60 * 1000; // 24 hours in milliseconds
+      const timeLimit = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
       // Check temperature thresholds
       if (
