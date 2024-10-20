@@ -1,6 +1,7 @@
 import toast, { Toaster } from "react-hot-toast";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Threshold from "./components/Threshold/Threshold";
+import NavBar from "./components/Navbar/Navbar";
 
 function App() {
   toast.success("Welcome to the Weather App!");
@@ -14,6 +15,7 @@ function App() {
     <div className="overflow-hidden">
       <Toaster position="bottom-right" reverseOrder={false} />
       <div className="flex flex-col justify-center items-center w-screen h-full overflow-hidden">
+        <NavBar />
         <Threshold />
         <Dashboard />
       </div>

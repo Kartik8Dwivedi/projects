@@ -13,7 +13,7 @@ interface WeatherCardProps {
 const WeatherCard: React.FC<WeatherCardProps> = ({ city, onClick }) => {
   return (
     <button
-      className="bg-white shadow-lg rounded-lg p-6 cursor-pointer"
+      className=" shadow-lg rounded-lg p-6 cursor-pointer"
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {

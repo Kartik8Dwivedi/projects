@@ -86,7 +86,7 @@ const NotificationSetup: React.FC = () => {
           >
             Select Your City
           </label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-black">
             {[
               { name: "Mumbai", id: 1275339 },
               { name: "Hyderabad", id: 1269843 },

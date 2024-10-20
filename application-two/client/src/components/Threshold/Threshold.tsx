@@ -11,6 +11,7 @@ const Threshold = () => {
           role="tab"
           className="tab ml-20 md:ml-60 lg:ml-[26rem] text-lg font-semibold"
           aria-label="Search"
+          defaultChecked
         />
         <div role="tabpanel" className="tab-content p-10">
           <Search />
@@ -22,7 +23,6 @@ const Threshold = () => {
           role="tab"
           className="tab mr-16 md:mr-48 lg:mr-[21rem] text-lg font-semibold"
           aria-label="Notify"
-          defaultChecked
         />
         <div role="tabpanel" className="tab-content p-10">
           <Notify />
