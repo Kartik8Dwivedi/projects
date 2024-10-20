@@ -14,5 +14,5 @@ export const OPENWEATHER_URI =
 
 export const JWT_SECRET = process.env.JWT_SECRET || "aefihuaiujhboiuvhado";
 
-export const E = process.env.E || "smtp.ethereal.email";
-export const EP = process.env.EP || "smtp.ethereal.email";
+export const E = process.env.EMAIL || "smtp.ethereal.email";
+export const EP = process.env.EMAIL_PASSWORD || "smtp.ethereal.email";
