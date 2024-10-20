@@ -12,7 +12,7 @@ function App() {
     }
   );
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden bg-secondary/10">
       <Toaster position="bottom-right" reverseOrder={false} />
       <div className="flex flex-col justify-center items-center w-screen h-full overflow-hidden">
         <NavBar />

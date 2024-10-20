@@ -9,7 +9,7 @@ const Threshold = () => {
           type="radio"
           name="my_tabs_1"
           role="tab"
-          className="tab ml-20 md:ml-60 lg:ml-[26rem] text-lg font-semibold"
+          className="tab ml-28 md:ml-80 lg:ml-[21rem] text-xl font-bold"
           aria-label="Search"
           defaultChecked
         />
@@ -21,7 +21,7 @@ const Threshold = () => {
           type="radio"
           name="my_tabs_1"
           role="tab"
-          className="tab mr-16 md:mr-48 lg:mr-[21rem] text-lg font-semibold"
+          className="tab mr-16 md:mr-48 lg:mr-[21rem] text-xl font-bold"
           aria-label="Notify"
         />
         <div role="tabpanel" className="tab-content p-10">

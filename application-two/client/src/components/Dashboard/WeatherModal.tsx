@@ -47,8 +47,8 @@ const WeatherModal: React.FC<WeatherModalProps> = ({
     ].dominantWeather;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg w-96">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center ">
+      <div className="bg-secondary-content/90 p-8 rounded-lg w-96">
         <h2 className="text-2xl font-semibold mb-4">
           {city.cityName} Weather Summary
         </h2>

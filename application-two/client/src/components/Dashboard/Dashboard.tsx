@@ -96,6 +96,12 @@ const Dashboard: React.FC = () => {
           />
         )}
       </div>
+      <footer className="bg-secondary/70 text-white p-4 text-center w-screen min-h-[55%]">
+        <p>
+          &copy; {new Date().getFullYear()} Weather Monitoring App. All rights
+          reserved.
+        </p>
+      </footer>
     </>
   );
 };
