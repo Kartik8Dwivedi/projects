@@ -4,80 +4,11 @@
 
 This project consists of two separate applications:
 
-1. [Rule Engine with AST (Abstract Syntax Tree)](#application-1--rule-engine-with-ast)
-2. [Real-time Data Processing System for Weather Monitoring with Rollups and Aggregates](#application-2--weather-monitoring-application)
-
-# Application 1 : Rule Engine with AST
-
-### Key Features
-
--	Defined a **specific data structure** to represent the **AST**.
--	Proper **schema design** for the rule management system.
--	Implemented a **parser** to convert the rule string into an AST.
--	Proper **validation of rules**.
--	**Error handling** for invalid rules.
--	**Modification of rules (CRUD)** under rule management dashboard
--	**Modular** and **efficient** codebase
--	**Dynamic Rule Creation:** Users can define rules using a simple syntax that can be **parsed into Abstract Syntax Trees**, allowing for complex logical operations.
--	**Real-time Evaluation:** The system evaluates the defined rules against **user-provided attributes** in real-time, providing immediate feedback on eligibility or compliance.
--	**Modular Architecture:** The project uses a modular approach with separate components for rule creation, evaluation, and the user interface, making it easier to maintain and extend.
--	**API-Driven Backend:** The backend is structured around RESTful APIs, allowing for easy integration with other services or front-end applications.
--	**User-Friendly Interface:** The front end uses React with Tailwind CSS and DaisyUI, providing a modern, responsive, and intuitive user interface for rule management and evaluation.
--	**Custom Validation Middleware:** Middleware functions validate input data for rules and attributes, ensuring that only valid data is processed.
--	**Combination of Rules:** Users can combine multiple rules into a single evaluation context, allowing for more complex logic and greater flexibility.
-
-- Backend is hosted on **Vercel** and these routes can be accessed here: [[Link]](https://zeotap-project-one.vercel.app/api/v1/)
-- Full stack application is hosted at **Vercel** and can be accessed from here: [[Link]](https://zeotap-project-one-redeploy.vercel.app/)
-
-### Endpoints
-
-- GET /rules - Get all rules with proper pagination and offset
-- POST /rules - Create a new rule
-- GET /rules/:id - Get a rule by id
-- PUT /rules/:id - Update a rule by id
-- DELETE /rules/:id - Delete a rule by id
-- POST /evaluate - Evaluate a rule
-- POST /combine - Combine multiple rules
-
-## Setup Instructions
-- Note: The **environment variables** are *deliberately pushed to the github repository* for the ease of setup and testing. In **production**, these should be stored in a .env file and added to the .gitignore file.
-
-1. Clone the repository and navigate to the project folder.
-```shell
-git clone https://github.com/Kartik8Dwivedi/projects
-cd projects
-cd application-one
-```
-
-2. Install dependencies for Backend
-```shell
-cd server
-npm install
-```
-
-3. Start the backend server
-```shell
-npm run dev
-```
-Now the server is up and running on port 3030.
-
-4. Now open another fresh terminal and let's start the frontend.
-```shell
-cd application-one
-cd client
-```
-5. Installing dependencies for Frontend
-```shell
-npm install
-```
-6. Start the frontend server
-```shell
-npm run dev
-```
-Now the frontend server is up and running. Open the browser and navigate to http://localhost:5173/ to view the application.
+2. [Real-time Data Processing System for Weather Monitoring with Rollups and Aggregates](#application-1--weather-monitoring-application)
+1. [Rule Engine with AST (Abstract Syntax Tree)](#application-2--rule-engine-with-ast)
 
 
-# Application 2 : Weather Monitoring Application
+# Application 1 : Weather Monitoring Application
 - This project monitors weather conditions for **six cities** (**problem statement constraint**), allowing users to set **notifications** for specific weather **thresholds**. The system **aggregates** historical data to efficiently manage and store weather data, while ensuring users are notified promptly about **critical conditions**.
 - This project is **end to end deployed and hosted** on **vercel's** platform, the fullstack application can be accessed from here: [**[Link]**](https://zeotap-project-two-client.vercel.app/)
 - The backend is hosted on vercel and can be accessed from here: [**[Link]**](https://zeotap-project-two.vercel.app/api/v1)
@@ -227,4 +158,75 @@ Now the frontend server is up and running. Open the browser and navigate to http
 - **Geolocation Integration**: Use geolocation to fetch weather data based on user location.
 - **Historical Data Analysis**: Implement historical data analysis for trend forecasting.
 - **Machine Learning**: Implement ML models for weather prediction and anomaly detection.
+
+
+
+# Application 2 : Rule Engine with AST
+
+### Key Features
+
+-	Defined a **specific data structure** to represent the **AST**.
+-	Proper **schema design** for the rule management system.
+-	Implemented a **parser** to convert the rule string into an AST.
+-	Proper **validation of rules**.
+-	**Error handling** for invalid rules.
+-	**Modification of rules (CRUD)** under rule management dashboard
+-	**Modular** and **efficient** codebase
+-	**Dynamic Rule Creation:** Users can define rules using a simple syntax that can be **parsed into Abstract Syntax Trees**, allowing for complex logical operations.
+-	**Real-time Evaluation:** The system evaluates the defined rules against **user-provided attributes** in real-time, providing immediate feedback on eligibility or compliance.
+-	**Modular Architecture:** The project uses a modular approach with separate components for rule creation, evaluation, and the user interface, making it easier to maintain and extend.
+-	**API-Driven Backend:** The backend is structured around RESTful APIs, allowing for easy integration with other services or front-end applications.
+-	**User-Friendly Interface:** The front end uses React with Tailwind CSS and DaisyUI, providing a modern, responsive, and intuitive user interface for rule management and evaluation.
+-	**Custom Validation Middleware:** Middleware functions validate input data for rules and attributes, ensuring that only valid data is processed.
+-	**Combination of Rules:** Users can combine multiple rules into a single evaluation context, allowing for more complex logic and greater flexibility.
+
+- Backend is hosted on **Vercel** and these routes can be accessed here: [[Link]](https://zeotap-project-one.vercel.app/api/v1/)
+- Full stack application is hosted at **Vercel** and can be accessed from here: [[Link]](https://zeotap-project-one-redeploy.vercel.app/)
+
+### Endpoints
+
+- GET /rules - Get all rules with proper pagination and offset
+- POST /rules - Create a new rule
+- GET /rules/:id - Get a rule by id
+- PUT /rules/:id - Update a rule by id
+- DELETE /rules/:id - Delete a rule by id
+- POST /evaluate - Evaluate a rule
+- POST /combine - Combine multiple rules
+
+## Setup Instructions
+- Note: The **environment variables** are *deliberately pushed to the github repository* for the ease of setup and testing. In **production**, these should be stored in a .env file and added to the .gitignore file.
+
+1. Clone the repository and navigate to the project folder.
+```shell
+git clone https://github.com/Kartik8Dwivedi/projects
+cd projects
+cd application-one
+```
+
+2. Install dependencies for Backend
+```shell
+cd server
+npm install
+```
+
+3. Start the backend server
+```shell
+npm run dev
+```
+Now the server is up and running on port 3030.
+
+4. Now open another fresh terminal and let's start the frontend.
+```shell
+cd application-one
+cd client
+```
+5. Installing dependencies for Frontend
+```shell
+npm install
+```
+6. Start the frontend server
+```shell
+npm run dev
+```
+Now the frontend server is up and running. Open the browser and navigate to http://localhost:5173/ to view the application.
 
