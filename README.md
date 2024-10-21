@@ -221,6 +221,7 @@ cd application-one
 cd client
 ```
 5. Installing dependencies for Frontend
+- Note: In the `.env` file, change the `VITE_BACKEND_URI`, it is set to the deployed backend server, comment it, and uncomment the very next line in `.env` file which will allow the frontend to consume api's from the localhost server backend
 ```shell
 npm install
 ```
